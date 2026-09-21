@@ -16,3 +16,5 @@ Unofficial Chrome extension that lets you right-click any event in [Notion Calen
 3. Turn on **Developer mode** (top right).
 4. Click **Load unpacked** and select the **`extension`** folder inside what you unzipped.
 5. Reload Notion Calendar.
+
+### [usage and permissions](usage-and-permissions)
