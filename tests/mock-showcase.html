@@ -1,0 +1,62 @@
+<!doctype html>
+<!--
+  A made-up week of classes that looks like Notion Calendar's week view, used by showcase.js to
+  produce the before/after images in docs/. Every class comes from one "timetable" calendar, so
+  they all start out the same green. Nothing here is a real person's calendar.
+-->
+<html><head><meta charset="utf-8"><title>Mock Notion Calendar (showcase)</title><style>
+*{box-sizing:border-box}
+body{margin:0;font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#fff;color:#37352f;--nds-surface-page:rgba(255,255,255,1)}
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 6px}
+.top b{font-size:19px;font-weight:700;letter-spacing:-.01em}
+.top span{font-size:12px;color:#787774;border:1px solid #e9e8e4;border-radius:6px;padding:3px 9px}
+.heads{display:flex;margin-left:52px;border-bottom:1px solid #eeede9}
+.heads div{flex:1;text-align:center;padding:6px 0 7px;color:#787774;font-size:12px}
+.grid{position:relative;display:flex;margin-left:52px}
+.hours{position:absolute;left:-52px;top:0;width:46px;text-align:right;color:#9b9a97;font-size:10px}
+.hours div{height:54px;transform:translateY(-6px)}
+.col{position:relative;flex:1;height:540px;border-left:1px solid #eeede9;
+  background:repeating-linear-gradient(#fff 0 53px,#f1f0ec 53px 54px)}
+div[data-event-chip-key]{position:absolute;left:3px;right:5px;border-radius:5px;padding:4px 6px 4px 10px;overflow:hidden;
+  background:var(--background-color);color:var(--foreground-color-primary);cursor:pointer;line-height:1.25;font-weight:500}
+div[data-event-chip-key]::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(var(--ribbon-color-primary),var(--ribbon-color-secondary))}
+.t{font-size:10px;opacity:.8;margin-top:1px;font-weight:400}
+</style></head><body>
+<div class="top"><b>October 2026</b><span>Week</span></div>
+<div class="heads" id="heads"></div>
+<div class="grid" id="grid"><div class="hours" id="hours"></div></div>
+<script>
+const SCHOOL = "--background-color: rgb(227, 253, 231); --ribbon-color-primary: rgb(78, 174, 119); --ribbon-color-secondary: rgb(78, 174, 119); --foreground-color-primary: rgb(0, 123, 44);";
+const MINE = "--background-color: rgb(255, 223, 255); --ribbon-color-primary: rgb(191, 0, 194); --ribbon-color-secondary: rgb(191, 0, 194); --foreground-color-primary: rgb(156, 16, 156);";
+const C = {
+  micro: "2100-Microeconomics", fin: "4410-Corporate Finance", mkt: "3050-Marketing",
+  ops: "3200-Operations", acc: "1500-Accounting"
+};
+const A = [8.5, 9.83, "8:30–9:50 AM"], B = [10.17, 11.5, "10:10–11:30 AM"], P = [13.17, 14.5, "1:10–2:30 PM"];
+// [day header, [[title, [start, end, label], style]]]
+const week = [
+  ["Mon 5", [[C.micro + " (Session 7)", A], [C.fin + " (Session 7)", B], ["Lunch", [12, 13, "12–1 PM"], MINE], [C.mkt + " (Session 6)", P]]],
+  ["Tue 6", [[C.ops + " (Session 5)", A], [C.acc + " (Session 8)", B], [C.micro + " (Session 8)", P], ["Gym", [15.5, 17, "3:30–5 PM"], MINE]]],
+  ["Wed 7", [[C.fin + " (Session 8)", A], [C.mkt + " (Session 7)", B], ["Lunch", [12, 13, "12–1 PM"], MINE], [C.ops + " (Session 6)", P]]],
+  ["Thu 8", [[C.acc + " (Session 9)", A], [C.micro + " (Session 9)", B], [C.fin + " (Session 9)", P], ["Study group", [15, 16.5, "3–4:30 PM"], MINE]]],
+  ["Fri 9", [[C.mkt + " (Session 8)", A], [C.ops + " (Session 7)", B], ["Lunch", [12, 13, "12–1 PM"], MINE], [C.acc + " (Session 10)", P]]]
+];
+const START = 8, HOUR = 54;
+const hours = document.getElementById("hours");
+for (let h = START; h < START + 10; h++) { const d = document.createElement("div"); d.textContent = `${((h + 11) % 12) + 1} ${h < 12 ? "AM" : "PM"}`; hours.append(d); }
+week.forEach(([head, evs], di) => {
+  const h = document.createElement("div"); h.textContent = head; document.getElementById("heads").append(h);
+  const col = document.createElement("div"); col.className = "col";
+  evs.forEach(([title, [from, to, label], style = SCHOOL], i) => {
+    const c = document.createElement("div");
+    c.setAttribute("data-event-chip-key", `d${di}e${i}`);
+    c.setAttribute("style", style + `top:${(from - START) * HOUR + 1}px;height:${(to - from) * HOUR - 2}px`);
+    const a = document.createElement("div"); a.textContent = title;
+    const b = document.createElement("div"); b.className = "t"; b.textContent = label;
+    c.append(a, b); col.append(c);
+  });
+  document.getElementById("grid").append(col);
+});
+</script>
+</body></html>

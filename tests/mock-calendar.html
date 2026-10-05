@@ -1,0 +1,70 @@
+<!doctype html>
+<!--
+  A stand-in for Notion Calendar's week view, used by extension.test.js.
+  It copies the parts of Notion's markup the extension relies on:
+    • each event is a <div data-event-chip-key="…">
+    • its fill comes from the CSS variable --background-color
+    • its left bar comes from --ribbon-color-primary / --ribbon-color-secondary
+  It also throws away and rebuilds every event on render(), like React does when you change weeks,
+  and has its own right-click menu so we can check the extension doesn't break it.
+-->
+<html><head><meta charset="utf-8"><title>Mock Notion Calendar</title><style>
+body{margin:0;font:13px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#fff;color:#37352f}
+.grid{display:flex;padding:16px 16px 0;gap:8px}
+.col{position:relative;width:236px;height:500px;border-left:1px solid #eee}
+.col h4{margin:0 0 6px 10px;font-weight:500;color:#787774}
+div[data-event-chip-key]{position:absolute;left:4px;right:4px;border-radius:6px;padding:5px 8px 5px 12px;overflow:hidden;
+  background:var(--background-color);color:var(--text-color);cursor:pointer;box-sizing:border-box}
+div[data-event-chip-key]::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px;
+  background:linear-gradient(var(--ribbon-color-primary),var(--ribbon-color-secondary))}
+.t{font-size:11px;opacity:.8;margin-top:2px}
+#notion-menu{position:fixed;display:none;background:#2f2f2f;color:#fff;padding:8px 12px;border-radius:6px}
+</style></head><body>
+<div class="grid" id="grid"></div>
+<div id="notion-menu">Notion's own menu</div>
+<script>
+const GREEN = "--background-color: rgb(226, 251, 228); --ribbon-color-primary: rgb(76, 175, 92); --ribbon-color-secondary: rgb(76, 175, 92); --text-color: rgb(40, 110, 55);";
+const PINK = "--background-color: rgb(250, 222, 245); --ribbon-color-primary: rgb(180, 60, 170); --ribbon-color-secondary: rgb(180, 60, 170); --text-color: rgb(140, 40, 130);";
+const days = {
+  Wed: [["micro-4", "2100-Microeconomics (Lecture 4)", "9–10:20 AM", 0, GREEN],
+        ["fin-3", "4410-Corporate Finance (Session 3)", "11 AM–12:20 PM", 115, GREEN],
+        ["coffee", "Coffee with Sam", "2 PM", 230, PINK]],
+  Thu: [["micro-5", "2100-Microeconomics (Lecture 5)", "9–10:20 AM", 0, GREEN],
+        ["bio-lab", "BIO 101 Lab", "1–3 PM", 115, GREEN],
+        ["mkt-6", "3050-Marketing (Session 6)", "3:30–4:50 PM", 230, GREEN]],
+  Fri: [["fin-4", "4410-Corporate Finance (Session 4)", "11 AM–12:20 PM", 0, GREEN],
+        ["bio-lec", "BIO 101 Lecture", "1–2 PM", 115, GREEN],
+        ["club", "Club Meeting", "5:30–7 PM", 230, PINK],
+        ["odd", "/Club|Coffee/", "8 PM", 345, PINK]]
+};
+function render() {
+  const g = document.getElementById("grid");
+  g.innerHTML = "";
+  for (const [day, evs] of Object.entries(days)) {
+    const col = document.createElement("div");
+    col.className = "col";
+    col.innerHTML = `<h4>${day}</h4>`;
+    for (const [key, title, time, top, style] of evs) {
+      const c = document.createElement("div");
+      c.setAttribute("data-event-chip-key", key);
+      c.setAttribute("style", style + `top:${top + 24}px;height:104px`);
+      const a = document.createElement("div"); a.textContent = title;
+      const b = document.createElement("div"); b.className = "t"; b.textContent = time;
+      c.append(a, b);
+      col.appendChild(c);
+    }
+    g.appendChild(col);
+  }
+}
+render();
+window.render = render;
+document.addEventListener("contextmenu", (e) => {
+  if (!e.target.closest("[data-event-chip-key]")) return;
+  e.preventDefault();
+  const m = document.getElementById("notion-menu");
+  m.style.display = "block"; m.style.left = e.clientX + "px"; m.style.top = e.clientY + "px";
+});
+window.shortcutHits = 0;
+document.addEventListener("keydown", () => window.shortcutHits++);
+</script>
+</body></html>

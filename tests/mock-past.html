@@ -1,0 +1,52 @@
+<!doctype html>
+<!--
+  A second stand-in for Notion Calendar's week view, used by extension.test.js to check how
+  past events are recognised. Its three columns are yesterday, today and tomorrow, with day
+  headers like "Wed 30", and today has one event that has finished and one still running.
+-->
+<html><head><meta charset="utf-8"><title>Mock Notion Calendar (past events)</title><style>
+body{margin:0;font:13px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#fff;color:#37352f}
+.grid{display:flex;padding:40px 16px 0;gap:8px}
+.col{position:relative;width:236px;height:460px;border-left:1px solid #eee}
+.col h4{margin:0 0 6px 10px;font-weight:500;color:#787774}
+div[data-event-chip-key]{position:absolute;left:4px;right:4px;border-radius:6px;padding:5px 8px 5px 12px;overflow:hidden;
+  background:var(--background-color);color:var(--text-color);box-sizing:border-box;height:60px}
+.t{font-size:11px;opacity:.8;margin-top:2px}
+</style></head><body>
+<div class="grid" id="grid"></div>
+<script>
+const GREEN = "--background-color: rgb(226, 251, 228); --ribbon-color-primary: rgb(76, 175, 92); --ribbon-color-secondary: rgb(76, 175, 92); --text-color: rgb(40, 110, 55);";
+// What the real Notion Calendar puts on a chip: its text colour is washed out once the event is over.
+const NOTION = "--background-color: rgb(227, 253, 231); --ribbon-color-primary: rgb(78, 174, 119); --ribbon-color-secondary: rgb(78, 174, 119); --foreground-color-primary: rgb(0, 123, 44);";
+const NOTION_OVER = "--background-color: rgb(227, 253, 231); --ribbon-color-primary: rgb(197, 232, 205); --ribbon-color-secondary: rgb(197, 232, 205); --foreground-color-primary: rgb(137, 181, 150);";
+const NOTION_MONTH_OVER = "--background-color: transparent; --ribbon-color-primary: rgb(197, 232, 205); --ribbon-color-secondary: rgb(197, 232, 205); --foreground-color-primary: rgb(137, 181, 150);";
+document.body.style.setProperty("--nds-surface-page", "rgba(255,255,255,1)");
+const now = new Date();
+const clock = (d) => d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+const hoursFromNow = (h) => new Date(now.getTime() + h * 3600000);
+const range = (a, b) => `${clock(hoursFromNow(a))}–${clock(hoursFromNow(b))}`;
+const days = [
+  // The "notion-…" chips carry Notion's own colours, deliberately in columns that disagree with them.
+  [-1, [["past-ev", "Past Session", "9–10 AM", 0], ["notion-live", "Notion Live Session", "9–10 AM", 70, NOTION]]],
+  [0, [["today-done", "Finished Session", range(-2, -1), 0], ["today-live", "Running Session", range(-1, 1), 70], ["today-allday", "All-day Session", "", 140]]],
+  [1, [["future-ev", "Future Session", "9–10 AM", 0], ["notion-over", "Notion Over Session", "9–10 AM", 70, NOTION_OVER], ["notion-month-over", "Notion Month Session", "", 140, NOTION_MONTH_OVER]]]
+];
+const g = document.getElementById("grid");
+for (const [offset, evs] of days) {
+  const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+  const col = document.createElement("div");
+  col.className = "col";
+  col.innerHTML = `<h4>${d.toLocaleDateString("en-US", { weekday: "short" })} ${d.getDate()}</h4>`;
+  for (const [key, title, time, top, style = GREEN] of evs) {
+    const c = document.createElement("div");
+    c.setAttribute("data-event-chip-key", key);
+    c.setAttribute("style", style + `top:${top + 24}px`);
+    const a = document.createElement("div"); a.textContent = title;
+    c.append(a);
+    if (time) { const b = document.createElement("div"); b.className = "t"; b.textContent = time; c.append(b); }
+    col.appendChild(c);
+  }
+  g.appendChild(col);
+}
+</script>
+</body></html>
