@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <filter id="chip-shadow" x="-20%" y="-20%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#141E28" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  
+  <!-- Chip 1 (Top-Left: Lime) -->
+  <g filter="url(#chip-shadow)">
+    <rect x="6" y="10" width="90" height="54" rx="15" fill="#E4F5D6"/>
+    <rect x="6.5" y="10.5" width="89" height="53" rx="14.5" fill="none" stroke="#27AE60" stroke-opacity="0.25" stroke-width="1"/>
+    <rect x="6" y="10" width="13" height="54" rx="6.5" fill="#27AE60"/>
+    <rect x="27" y="26" width="52" height="7.5" rx="3.75" fill="#239452" opacity="0.7"/>
+    <rect x="27" y="40" width="34" height="6.5" rx="3.25" fill="#239452" opacity="0.4"/>
+  </g>
+  
+  <!-- Chip 2 (Bottom-Right: Indigo, overlapping) -->
+  <g filter="url(#chip-shadow)">
+    <rect x="32" y="64" width="90" height="54" rx="15" fill="#D8E6FF"/>
+    <rect x="32.5" y="64.5" width="89" height="53" rx="14.5" fill="none" stroke="#4834D4" stroke-opacity="0.25" stroke-width="1"/>
+    <rect x="32" y="64" width="13" height="54" rx="6.5" fill="#4834D4"/>
+    <rect x="53" y="80" width="52" height="7.5" rx="3.75" fill="#3D29BE" opacity="0.7"/>
+    <rect x="53" y="94" width="34" height="6.5" rx="3.25" fill="#3D29BE" opacity="0.4"/>
+  </g>
+</svg>

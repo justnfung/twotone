@@ -1,6 +1,6 @@
 {
   "name": "twotone",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "private": true,
   "description": "TwoTone: right-click a Notion Calendar event to give it, or its whole course, its own fill colour.",
   "license": "MIT",

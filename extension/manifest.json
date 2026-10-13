@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TwoTone for Notion Calendar",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Right-click a Notion Calendar event to give it, or its whole course, its own fill colour, or to hide it. Keeps the calendar's colour bar.",
   "permissions": ["storage"],
   "background": { "service_worker": "background.js" },
